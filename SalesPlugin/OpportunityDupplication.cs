@@ -9,6 +9,7 @@ using Microsoft.Xrm.Sdk.Client;
 
 namespace SalesPlugin
 {
+    //Late-bound ((this code is using it)(not knwing the data type before get the data), while Early-bound (knowing the data before process to get data)
     /// <summary>
     /// Plugin to duplicate an Opportunity record and related stakeholders
     /// </summary>
@@ -83,6 +84,7 @@ namespace SalesPlugin
                                     attribute.Key != "modifiedby" &&
                                     attribute.Key != "statecode" &&
                                     attribute.Key != "statuscode" &&
+                                    attribute.Key != "statecode" &&
                                     attribute.Key != "versionnumber")
                                 {
                                     duplicateOpportunity[attribute.Key] = attribute.Value;
