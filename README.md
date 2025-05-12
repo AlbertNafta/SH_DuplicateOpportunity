@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# SalesHub
-=======
 # SH_DuplicateOpportunity
 ""# Opportunity Clone Requirement
 
@@ -195,4 +192,3 @@ A plugin can only have a **max capacity of 16MB**, which is defined by the compi
 * [Web Access Plugin Sample](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/org-service/samples/web-access-plugin)
 * [Accessing Web Services](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/access-web-services)
   ""
->>>>>>> 47bcaf1bbb550700f3c97ffce0aa2603f1211f6d
