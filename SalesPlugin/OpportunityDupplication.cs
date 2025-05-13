@@ -101,7 +101,7 @@ namespace SalesPlugin
 
                             // Clone the stakeholder relationships
                             CloneOpportunityStakeholders(service, tracingService, opportunityRef.Id, duplicateOpportunityId);
-
+                            CloneOpportunityProduct(service, tracingService, opportunityRef.Id, duplicateOpportunityId);
                             // Set the output parameter with the ID of the new opportunity
                             context.OutputParameters["DuplicatedOpportunityId"] = duplicateOpportunityId;
                             context.OutputParameters["output"] = duplicateOpportunityId;
@@ -201,5 +201,73 @@ namespace SalesPlugin
                 throw new InvalidPluginExecutionException($"Error cloning stakeholder relationships: {ex.Message}", ex);
             }
         }
+
+        private void CloneOpportunityProduct(IOrganizationService service, ITracingService tracingService, Guid originalOpportunityId, Guid duplicateOpportunityId)
+        {
+            try
+            {
+                tracingService.Trace("Starting to clone product relationships");
+
+                // Fetch
+                string fetchXml = $@"
+                    <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                       <entity name=""opportunityproduct"">
+                         <attribute name=""opportunityproductid"" />
+                         <attribute name=""opportunityid"" />
+                         <filter type='and'>
+                          <condition attribute='opportunityid' operator='eq' value='{originalOpportunityId}' />
+                        </filter>
+                    </entity>
+                    </fetch>";
+
+                EntityCollection productRelationships = service.RetrieveMultiple(new FetchExpression(fetchXml));
+
+                tracingService.Trace($"Found {productRelationships.Entities.Count} product relationships to clone");
+
+                foreach (var relationship in productRelationships.Entities)
+                {
+                    // Get the product from the relationship
+                  
+                        tracingService.Trace($"Creating relationship for product ID: {relationship.Id}");
+                    tracingService.Trace($"Attr of relationship for product ID: {relationship.Attributes}");
+
+                        //Create a new record in the intersect entity
+                       Entity newRelationship = new Entity("opportunityproduct");
+
+                        foreach (var attribute in relationship.Attributes)
+                        {
+                        tracingService.Trace($"Start to clone attr");
+                        if (attribute.Key != "createdon" &&
+                                    attribute.Key != "createdby" &&
+                                    attribute.Key != "modifiedon" &&
+                                    attribute.Key != "modifiedby" &&
+                                    attribute.Key != "statecode" &&
+                                    attribute.Key != "statuscode" &&
+                                    attribute.Key != "statecode" &&
+                                    attribute.Key != "versionnumber" &&
+                                    attribute.Key != "opportunityproductid" &&
+                                    attribute.Key != "opportunityid")
+                            {
+                                newRelationship[attribute.Key] = attribute.Value;
+                            tracingService.Trace($"Done 1 attr");
+                        }
+                            
+                        }
+                        newRelationship["opportunityid"] = new EntityReference("opportunity", duplicateOpportunityId); 
+                        // Create the new relationship record
+                        Guid newRelationshipId = service.Create(newRelationship);
+                        tracingService.Trace($"Created new product relationship record with ID: {newRelationshipId}");
+                    
+                }
+
+                tracingService.Trace("Finished cloning product relationships");
+            }
+            catch (Exception ex)
+            {
+                tracingService.Trace($"Error cloning product relationships: {ex.Message}");
+                throw new InvalidPluginExecutionException($"Error cloning product relationships: {ex.Message}", ex);
+            }
+        }
     }
 }
+
