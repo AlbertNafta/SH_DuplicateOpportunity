@@ -1,5 +1,9 @@
 # Mô tả và Hướng dẫn Sử Dụng Mã JavaScript Cho Command Button
 
+debug cho code plugin C#: vô link của app D365 (phần grid - show danh sách) và sửa etn=plugintracelog
+Ex: https://nhan-dev-env.crm5.dynamics.com/main.aspx?appid=7947952e-06da-ef11-8ee9-6045bd5b5666&pagetype=entitylist&etn=opportunity&viewid=00000000-0000-0000-00aa-000010003000&viewType=1039
+-> https://nhan-dev-env.crm5.dynamics.com/main.aspx?appid=7947952e-06da-ef11-8ee9-6045bd5b5666&pagetype=entitylist&etn=plugintracelog&viewid=16f97046-9cc9-40de-914f-13da29b681ec&viewType=1039
+
 ## Mô tả:
 File JavaScript này được tích hợp vào scripting của command button. Mục đích là gọi command button, sau đó command button này sẽ gọi plugin để sao chép cơ hội (duplicate opportunity).
 
